@@ -5,21 +5,21 @@
       <h3 class="title">用户登录</h3>
     </div>
     <div class="login-center">
-        <el-form :model="loginForm">
-          <el-form-item label="账号">
+        <el-form :model="loginForm" :rules="rules" ref="ruleFormRef">
+          <el-form-item label="账号" prop="name">
             <el-icon :size="20">
               <UserFilled />
             </el-icon>
             <el-input v-model="loginForm.name" />
           </el-form-item>
-          <el-form-item label="密码">
+          <el-form-item label="密码" prop="password">
             <el-icon :size="20">
               <Lock />
             </el-icon>
             <el-input v-model="loginForm.password" show-password/>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">登录</el-button>
+            <el-button type="primary" @click="submitForm(ruleFormRef)">登录</el-button>
             <el-button >注册</el-button>
           </el-form-item>
        </el-form>
@@ -29,14 +29,33 @@
 </template>
 
 <script setup lang="ts">
-    import { reactive } from "vue";
+    import { ref,reactive } from "vue";
     import { UserFilled , Lock } from "@element-plus/icons-vue";
+    import type { FormInstance, FormRules } from 'element-plus'
     const loginForm = reactive({
       name: '',
       password:'',
     })
-    const onSubmit = () => {
-      console.log('submit!')
+    const ruleFormRef = ref<FormInstance>()
+    const rules = reactive({
+      name: [
+        { required: true, message: '账户不能为空', trigger: 'blur' },
+      ],
+      password: [
+        { required: true, message: '密码不能为空', trigger: 'blur' },
+      ],
+    })
+
+    // 标单校验
+    const submitForm = async (formEl: FormInstance | undefined) => {
+      if (!formEl) return
+      await formEl.validate((valid, fields) => {
+        if (valid) {
+          console.log('submit!')
+        } else {
+          console.log('error submit!', fields)
+        }
+      })
     }
 
 </script>
@@ -116,10 +135,14 @@ html{
                       padding-left: 25px;
                     }
                   }
+                  .el-form-item__error{
+                    margin-left: 50px;
+                    margin-top: 5px;
+                    }
                   .el-button{
                     width: 159px;
                     height: 40px;
-                    margin-top: 10px;
+                    margin-top: 15px;
                     float: left;
                   }
                 }
