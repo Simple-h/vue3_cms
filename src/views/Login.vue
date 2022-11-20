@@ -10,13 +10,13 @@
             <el-icon :size="20">
               <UserFilled />
             </el-icon>
-            <el-input v-model="loginForm.name" />
+            <el-input v-model.trim="loginForm.name" />
           </el-form-item>
           <el-form-item label="密码" prop="password">
             <el-icon :size="20">
               <Lock />
             </el-icon>
-            <el-input v-model="loginForm.password" show-password/>
+            <el-input v-model.trim="loginForm.password" show-password/>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm(ruleFormRef)">登录</el-button>
@@ -30,13 +30,18 @@
 
 <script setup lang="ts">
     import { ref,reactive } from "vue";
+    import md5 from 'js-md5'
     import { UserFilled , Lock } from "@element-plus/icons-vue";
-    import type { FormInstance, FormRules } from 'element-plus'
-    const loginForm = reactive({
+    import type { FormInstance, FormRules } from 'element-plus';
+    import { login } from '../utils/login'
+    import { localSet } from '../utils/index'
+    
+    const loginForm = ref({
       name: '',
       password:'',
     })
     const ruleFormRef = ref<FormInstance>()
+    // 表单校验规则
     const rules = reactive({
       name: [
         { required: true, message: '账户不能为空', trigger: 'blur' },
@@ -46,14 +51,23 @@
       ],
     })
 
-    // 标单校验
+    // 表单校验
     const submitForm = async (formEl: FormInstance | undefined) => {
       if (!formEl) return
-      await formEl.validate((valid, fields) => {
+      await formEl.validate( async (valid, fields) => {
         if (valid) {
-          console.log('submit!')
+          // console.log('submit!')
+          let data={
+            userName: loginForm.value.name || '',
+            passwordMd5: md5(loginForm.value.password)
+          }
+         let res =  await login(data);
+         localSet('token', res)
+         window.location.href = '/'
+          
         } else {
           console.log('error submit!', fields)
+          return false;
         }
       })
     }
