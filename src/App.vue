@@ -4,8 +4,8 @@
       <el-aside class="aside">
         <div class="head">
           <div>
-            <img src="//s.weituibao.com/1582958061265/mlogo.png" alt="logo">
-            <span>vue3 admin</span>
+            <img src="https://pinia.vuejs.org/logo.svg" alt="logo">
+            <span>vue3+pinia</span>
           </div>
         </div>
         <div class="line" />
