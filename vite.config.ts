@@ -6,6 +6,9 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
+import { resolve } from "path"
+
+
 
 
 
@@ -13,20 +16,26 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-      vue(),
-      // ...
-      AutoImport({
-        resolvers: [ElementPlusResolver()],
-      }),
-      Components({
-        resolvers: [ElementPlusResolver()],
-      }),
-    ],
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData:'@import "./src/style/main.scss";'
-        }
+    vue(),
+    // ...
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    }),
+  ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@import "./src/style/main.scss";'
       }
     }
+  },
+  resolve: {
+    // ↓路径别名，主要是这部分
+    alias: {
+      "@": resolve(__dirname, "./src")
+    }
+  }
 })
