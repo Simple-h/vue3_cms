@@ -6,7 +6,7 @@
     </div>
     <div class="login-center">
         <el-form :model="loginForm" :rules="rules" ref="ruleFormRef">
-          <el-form-item label="账号" prop="name">
+          <el-form-item label="账号 " prop="name">
             <el-icon :size="20">
               <UserFilled />
             </el-icon>
